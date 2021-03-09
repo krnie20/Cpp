@@ -67,9 +67,15 @@ double Loan::totalInterestTaxDeducted(double taxDeductionRate) const {
 }
 
 void Loan::outputPeriodicalPayments(std::ostream &ost) const {
-    int n = _paymentsPerYear * _years;
+    int const n = _paymentsPerYear * _years;
     double debtLeft = _debt;
-    double PP[n][3]; {};
+    double **PP;
+
+    PP = new double *[n];
+    for (int i = 0; i < n + 1; i++) {
+        PP[i] = new double[3];
+    }
+
     double taxDeductionRate = 30.6 / 100;
     ost << "|Debt Remaining| " << "Interest expence| " << "Taxdeduction|" << std::endl;
     for (int i = 0; i < n ; i++ ) {
@@ -77,8 +83,12 @@ void Loan::outputPeriodicalPayments(std::ostream &ost) const {
         PP[i][1] = Loan::interestExpenses(debtLeft);
         PP[i][2] = Loan::interestExpenses(debtLeft) * taxDeductionRate;
         debtLeft = debtLeft - (payment() - interestExpenses(debtLeft));
+        //        std::cout << std::fixed << std::setprecision(2);
+        //        ost << "|"<< std::setw(14) <<PP[i][0] << "|"
+        //        << std::setw(17) << PP[i][1]<< "|"
+        //        << std::setw(13) << PP[i][2]<< "|" << std::endl;
     }
-    Loan::print(PP, n, std::cout);
+    Loan::printPP(PP, n, 3, std::cout);
 }
 
 double Loan::interestExpenses(double debt) const {
@@ -97,19 +107,21 @@ double Loan::payment() const {
     return y;
 }
 
-void Loan::print(double **array, int rows, std::ostream &ost) const{
-    double** ptrArray;
-    for (int i = 0; i < rows ; i++ ) {
-        ptrArray = array;
+void Loan::printPP(double **arr, int const first, int const second, std::ostream &ost) const{
+//    arr = new double *[first];
+//    for (int i = 0; i < first; i++) {
+//        arr[i] = new double[second];
+//    }
+
+    for (int i = 0; i < first +1; i++ ) {
         std::cout << std::fixed << std::setprecision(2);
-        ost << "|"<< std::setw(14) <<ptrArray[i][0] << "|"
-         << std::setw(17) << ptrArray[i][1]<< "|"
-         << std::setw(13) << ptrArray[i][2]<< "|" << std::endl;
+        ost << "|"<< std::setw(14) <<arr[i][0] << "|"
+        << std::setw(17) << arr[i][1]<< "|"
+        << std::setw(13) << arr[i][2]<< "|" << std::endl;
     }
+
+    for (int i = 0; i < first + 1; i++)
+        delete [] arr[i];
+    delete [] arr;
+
 }
-/*
-std::cout << std::fixed << std::setprecision(2);
-ost << "|"<< std::setw(14) <<PP[i][0] << "|"
-<< std::setw(17) << PP[i][1]<< "|"
-<< std::setw(13) << PP[i][2]<< "|" << std::endl;
-*/

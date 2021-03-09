@@ -42,7 +42,7 @@ public :
     // Help
     double interestExpenses (double debt) const ;
     double payment() const;
-    double ** initializeArray(double ** array);
+    void printPP(double **arr, int const first, int const second, std::ostream& ost) const;
 private :
     double _debt , _interestRate;
     int _years , _paymentsPerYear;
